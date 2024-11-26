@@ -7,7 +7,7 @@ on:
       - dev
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
@@ -20,17 +20,28 @@ jobs:
       uses: actions/setup-java@v3
       with:
         java-version: '17'
+        distribution: 'temurin'
 
-    # 3. Maven으로 빌드
+    # 3. Maven 빌드
     - name: Build with Maven
       run: mvn clean package
 
-    # 4. Docker 로그인
-    - name: Login to Azure Container Registry
-      run: echo "${{ secrets.ACR_PASSWORD }}" | docker login cepgbaseacr.azurecr.io -u "${{ secrets.ACR_USERNAME }}" --password-stdin
+    # 4. Base ACR 로그인
+    - name: Login to Base ACR
+      run: |
+        echo "${{ secrets.BASEACR_PASSWORD }}" | docker login ${{ secrets.BASEACR_LOGIN_SERVER }} -u "${{ secrets.BASEACR_USERNAME }}" --password-stdin
 
-    # 5. Docker 이미지 빌드 및 푸시
+    # 5. Base ACR에서 이미지 가져오기
+    - name: Pull Base OpenJDK Image
+      run: docker pull ${{ secrets.BASEACR_LOGIN_SERVER }}/openjdk:17-slim
+
+    # 6. CI/CD ACR 로그인
+    - name: Login to CI/CD ACR
+      run: |
+        echo "${{ secrets.CIACR_PASSWORD }}" | docker login ${{ secrets.CIACR_LOGIN_SERVER }} -u "${{ secrets.CIACR_USERNAME }}" --password-stdin
+
+    # 7. Docker 이미지 빌드 및 푸시
     - name: Build and Push Docker Image
       run: |
-        docker build -t cepgbaseacr.azurecr.io/app-82263855:latest .
-        docker push cepgbaseacr.azurecr.io/app-82263855:latest
+        docker build -t ${{ secrets.CIACR_LOGIN_SERVER }}/app-82263855:latest .
+        docker push ${{ secrets.CIACR_LOGIN_SERVER }}/app-82263855:latest
