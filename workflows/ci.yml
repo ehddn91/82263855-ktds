@@ -3,7 +3,6 @@ name: CI/CD Pipeline for app-82263855
 on:
   push:
     branches:
-      - main
       - dev
 
 jobs:
