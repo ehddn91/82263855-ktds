@@ -29,16 +29,25 @@ jobs:
       - name: Build with Maven
         run: ./mvnw clean package
 
-      # 5. CI/CD ACR 로그인
+      # 5. Base ACR 로그인 (cepgbaseacr)
+      - name: Login to Base Azure Container Registry
+        env:
+          BASEACR_LOGIN_SERVER: cepgbaseacr.azurecr.io
+          BASEACR_USERNAME: e9a4cced-cbc8-42f0-acf9-06e65396ad99
+          BASEACR_PASSWORD: sJn8Q~~Ymz9oTOvYHEdU56XF7MKNguMsro0HScum
+        run: |
+          echo "${BASEACR_PASSWORD}" | docker login "${BASEACR_LOGIN_SERVER}" -u "${BASEACR_USERNAME}" --password-stdin
+
+      # 6. CI/CD ACR 로그인 (ceappacr)
       - name: Login to CI/CD Azure Container Registry
         env:
-          ACR_LOGIN_SERVER: ceappacr.azurecr.io
-          ACR_USERNAME: dfaf12f5-647e-4a4e-b5e0-6977dae194bd
-          ACR_PASSWORD: KdS8Q~F-ufRo-GMV9Y3CWdHXczEekiPEzBINSbDV
+          CIACR_LOGIN_SERVER: ceappacr.azurecr.io
+          CIACR_USERNAME: dfaf12f5-647e-4a4e-b5e0-6977dae194bd
+          CIACR_PASSWORD: KdS8Q~F-ufRo-GMV9Y3CWdHXczEekiPEzBINSbDV
         run: |
-          echo "${ACR_PASSWORD}" | docker login "${ACR_LOGIN_SERVER}" -u "${ACR_USERNAME}" --password-stdin
+          echo "${CIACR_PASSWORD}" | docker login "${CIACR_LOGIN_SERVER}" -u "${CIACR_USERNAME}" --password-stdin
 
-      # 6. Docker 이미지 빌드 및 푸시
+      # 7. Docker 이미지 빌드 및 푸시
       - name: Build and Push Docker Image
         run: |
           docker build --no-cache -t ceappacr.azurecr.io/app-82263855:latest .
