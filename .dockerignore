@@ -1,5 +1,4 @@
-# .dockerignore
+# .dockerignore 예시
 target/
 .git/
-# 삭제할 가능성 있는 줄:
-.mvn/
+# .mvn/가 있다면 삭제
