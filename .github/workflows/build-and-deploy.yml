@@ -20,6 +20,7 @@ jobs:
       uses: actions/setup-java@v3
       with:
         java-version: '17'
+        distribution: 'temurin'  # 배포판 설정
 
     # 3. Maven으로 빌드
     - name: Build with Maven
@@ -27,10 +28,11 @@ jobs:
 
     # 4. Docker 로그인
     - name: Login to Azure Container Registry
-      run: echo "${{ secrets.ACR_PASSWORD }}" | docker login cepgbaseacr.azurecr.io -u "${{ secrets.ACR_USERNAME }}" --password-stdin
+      run: |
+        echo "${{ secrets.REGISTRY_PASSWORD }}" | docker login ${{ secrets.BASEACR_LOGIN_SERVER }} -u "${{ secrets.REGISTRY_USERNAME }}" --password-stdin
 
     # 5. Docker 이미지 빌드 및 푸시
     - name: Build and Push Docker Image
       run: |
-        docker build -t cepgbaseacr.azurecr.io/app-82263855:latest .
-        docker push cepgbaseacr.azurecr.io/app-82263855:latest
+        docker build -t ${{ secrets.STAPACR_LOGIN_SERVER }}/app-82263855:latest .
+        docker push ${{ secrets.STAPACR_LOGIN_SERVER }}/app-82263855:latest
