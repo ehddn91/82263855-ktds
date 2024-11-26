@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
       - name: app-82263855
-        image: ${{ secrets.BASEACR_LOGIN_SERVER }}/app-82263855:latest
+        image: cepgbaseacr.azurecr.io/app-82263855:latest
         ports:
         - containerPort: 8080
         envFrom:
