@@ -4,8 +4,8 @@ FROM cepgbaseacr.azurecr.io/docker.io/openjdk:17-slim
 # 작업 디렉토리 설정
 WORKDIR /app
 
-# Maven 빌드 파일 복사 및 의존성 다운로드
-COPY pom.xml mvnw ./
+# Maven Wrapper 복사 및 의존성 다운로드
+COPY pom.xml mvnw mvnw.cmd ./
 COPY .mvn/ .mvn/
 RUN ./mvnw dependency:go-offline
 
