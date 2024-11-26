@@ -1,0 +1,54 @@
+name: Build and Push Docker Image
+
+on:
+  push:
+    branches:
+      - dev
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. 저장소 코드 체크아웃
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      # 2. Maven Wrapper에 실행 권한 추가
+      - name: Add execute permission for mvnw
+        run: chmod +x mvnw
+
+      # 3. Java 환경 및 Maven 설치
+      - name: Set up Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      # 4. Maven 빌드
+      - name: Build with Maven
+        run: ./mvnw clean package
+
+      # 5. Base ACR 로그인 (cepgbaseacr.azurecr.io)
+      - name: Login to Base Azure Container Registry
+        env:
+          BASEACR_LOGIN_SERVER: ${{ secrets.BASEACR_LOGIN_SERVER }}
+          BASEACR_USERNAME: ${{ secrets.BASEACR_USERNAME }}
+          BASEACR_PASSWORD: ${{ secrets.BASEACR_PASSWORD }}
+        run: |
+          echo "${BASEACR_PASSWORD}" | docker login "${BASEACR_LOGIN_SERVER}" -u "${BASEACR_USERNAME}" --password-stdin
+
+      # 6. CI/CD ACR 로그인 (ceappacr.azurecr.io)
+      - name: Login to CI/CD Azure Container Registry
+        env:
+          CIACR_LOGIN_SERVER: ${{ secrets.CIACR_LOGIN_SERVER }}
+          CIACR_USERNAME: ${{ secrets.CIACR_USERNAME }}
+          CIACR_PASSWORD: ${{ secrets.CIACR_PASSWORD }}
+        run: |
+          echo "${CIACR_PASSWORD}" | docker login "${CIACR_LOGIN_SERVER}" -u "${CIACR_USERNAME}" --password-stdin
+
+      # 7. Docker 이미지 빌드 및 푸시
+      - name: Build and Push Docker Image
+        run: |
+          docker build --no-cache -t ${{ secrets.CIACR_LOGIN_SERVER }}/app-82263855:latest .
+          docker push ${{ secrets.CIACR_LOGIN_SERVER }}/app-82263855:latest
