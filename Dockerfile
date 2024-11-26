@@ -5,8 +5,8 @@ FROM cepgbaseacr.azurecr.io/docker.io/openjdk:17-slim
 WORKDIR /app
 
 # Maven Wrapper 복사
-COPY pom.xml mvnw ./    
-COPY .mvn/ .mvn/       
+COPY pom.xml mvnw ./
+COPY .mvn/ .mvn/
 RUN ./mvnw dependency:go-offline
 
 # 애플리케이션 소스 복사
