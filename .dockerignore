@@ -1,3 +1,5 @@
+# .dockerignore
 target/
-.mvn/
-*.log
+.git/
+# 삭제할 가능성 있는 줄:
+# .mvn/
