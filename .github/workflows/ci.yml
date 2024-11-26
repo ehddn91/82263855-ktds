@@ -29,17 +29,17 @@ jobs:
       - name: Build with Maven
         run: ./mvnw clean package
 
-      # 5. Azure Container Registry 로그인
-      - name: Login to Azure Container Registry
+      # 5. CI/CD ACR 로그인
+      - name: Login to CI/CD Azure Container Registry
         env:
-          ACR_LOGIN_SERVER: ${{ secrets.ACR_LOGIN_SERVER }}
-          ACR_USERNAME: ${{ secrets.ACR_USERNAME }}
-          ACR_PASSWORD: ${{ secrets.ACR_PASSWORD }}
+          ACR_LOGIN_SERVER: ceappacr.azurecr.io
+          ACR_USERNAME: dfaf12f5-647e-4a4e-b5e0-6977dae194bd
+          ACR_PASSWORD: KdS8Q~F-ufRo-GMV9Y3CWdHXczEekiPEzBINSbDV
         run: |
           echo "${ACR_PASSWORD}" | docker login "${ACR_LOGIN_SERVER}" -u "${ACR_USERNAME}" --password-stdin
 
       # 6. Docker 이미지 빌드 및 푸시
       - name: Build and Push Docker Image
         run: |
-          docker build --no-cache -t ${{ secrets.ACR_LOGIN_SERVER }}/app-82263855:latest .
-          docker push ${{ secrets.ACR_LOGIN_SERVER }}/app-82263855:latest
+          docker build --no-cache -t ceappacr.azurecr.io/app-82263855:latest .
+          docker push ceappacr.azurecr.io/app-82263855:latest
