@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: app-82263855
+  namespace: 82263855
   labels:
     app: app-82263855
 spec:
@@ -29,3 +30,5 @@ spec:
       - name: app-data
         persistentVolumeClaim:
           claimName: app-82263855-pvc
+      imagePullSecrets:
+      - name: myregistrykey
