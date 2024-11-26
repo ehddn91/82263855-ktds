@@ -11,6 +11,6 @@ public class UserController {
     @GetMapping
     public String getUserId() {
         // 실제 사번을 반환하도록 구현
-        return "12345"; // 예시 사번
+        return "82263855"; // 예시 사번
     }
 }
