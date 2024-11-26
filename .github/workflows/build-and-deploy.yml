@@ -31,9 +31,9 @@ jobs:
       run: |
         echo "${{ secrets.BASEACR_PASSWORD }}" | docker login ${{ secrets.BASEACR_LOGIN_SERVER }} -u "${{ secrets.BASEACR_USERNAME }}" --password-stdin
 
-    # 5. Base ACR에서 이미지 가져오기
+    # 5. Base ACR에서 OpenJDK 17-slim 이미지 가져오기
     - name: Pull Base OpenJDK Image
-      run: docker pull ${{ secrets.BASEACR_LOGIN_SERVER }}/openjdk:17-slim
+      run: docker pull ${{ secrets.BASEACR_LOGIN_SERVER }}/docker.io/openjdk:17-slim
 
     # 6. CI/CD ACR 로그인
     - name: Login to CI/CD ACR
