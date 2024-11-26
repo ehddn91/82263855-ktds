@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: app-82263855
-        image: cepgbaseacr.azurecr.io/app-82263855:latest
+        image: ${{ secrets.BASEACR_LOGIN_SERVER }}/app-82263855:latest
         ports:
         - containerPort: 8080
         envFrom:
@@ -31,4 +31,4 @@ spec:
         persistentVolumeClaim:
           claimName: app-82263855-pvc
       imagePullSecrets:
-      - name: myregistrykey
+      - name: acr-secret
