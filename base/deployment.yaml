@@ -31,5 +31,4 @@ spec:
       - name: app-data
         persistentVolumeClaim:
           claimName: app-82263855-pvc
-      imagePullSecrets:
-      - name: acr-secret
+
