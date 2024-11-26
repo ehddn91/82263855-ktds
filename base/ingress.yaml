@@ -5,7 +5,7 @@ metadata:
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
-  ingressClassName: nginx
+  ingressClassName: ingress-interna
   rules:
   - host: 82263855.ce-aa.kubepia.net
     http:
