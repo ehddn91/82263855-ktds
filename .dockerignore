@@ -1,4 +1,0 @@
-# .dockerignore 예시
-target/
-.git/
-# .mvn/가 있다면 삭제
