@@ -4,10 +4,10 @@ metadata:
   name: app-82263855-ingress
   namespace: 82263855
   annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: / # 요청 경로를 서비스로 전달
-    nginx.ingress.kubernetes.io/force-ssl-redirect: "false" # HTTPS 리디렉션 비활성화
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "false"
 spec:
-  ingressClassName: ingress-internal # Ingress Class를 내부 컨트롤러로 설정
+  ingressClassName: ingress-internal
   rules:
   - host: 82263855.ce-aa.kubepia.net
     http:
@@ -16,6 +16,6 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: app-82263855 # 연결할 Service 이름
+            name: app-82263855
             port:
-              number: 80       # Service의 포트 번호
+              number: 80
