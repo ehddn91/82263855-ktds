@@ -3,34 +3,24 @@ name: Build and Push Docker Image
 on:
   push:
     branches:
-      - dev  # dev 브랜치에서 푸시 시 실행
+      - dev
 
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
 
     steps:
-    # 1. 저장소 코드 체크아웃
-    - name: Checkout Code
-      uses: actions/checkout@v3
+      # 1. 저장소 코드 체크아웃
+      - name: Checkout Code
+        uses: actions/checkout@v3
 
-    # 2. Docker 빌드 컨텍스트 디버깅
-    - name: Debug Build Context
-      run: |
-        echo "Checking the current directory structure..."
-        ls -la
-        echo "Checking .mvn directory..."
-        ls -la .mvn
-        echo "Checking .mvn/wrapper directory..."
-        ls -la .mvn/wrapper
+      # 2. ACR 로그인
+      - name: Login to Azure Container Registry
+        run: |
+          echo "${{ secrets.BASEACR_PASSWORD }}" | docker login ${{ secrets.BASEACR_LOGIN_SERVER }} -u ${{ secrets.BASEACR_USERNAME }} --password-stdin
 
-    # 3. Azure Container Registry 로그인
-    - name: Login to Azure Container Registry
-      run: |
-        echo "${{ secrets.CIACR_PASSWORD }}" | docker login ${{ secrets.CIACR_LOGIN_SERVER }} -u ${{ secrets.CIACR_USERNAME }} --password-stdin
-
-    # 4. Docker 이미지 빌드 및 푸시
-    - name: Build and Push Docker Image
-      run: |
-        docker build --no-cache -t ${{ secrets.CIACR_LOGIN_SERVER }}/app-82263855:latest .
-        docker push ${{ secrets.CIACR_LOGIN_SERVER }}/app-82263855:latest
+      # 3. Docker 이미지 빌드 및 푸시
+      - name: Build and Push Docker Image
+        run: |
+          docker build --no-cache -t ${{ secrets.BASEACR_LOGIN_SERVER }}/app-82263855:latest .
+          docker push ${{ secrets.BASEACR_LOGIN_SERVER }}/app-82263855:latest
